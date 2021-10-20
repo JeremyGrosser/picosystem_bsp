@@ -4,12 +4,23 @@
 --  SPDX-License-Identifier: BSD-3-Clause
 --
 --  References:
---  https://shop.pimoroni.com/products/picosystem
---  https://cdn.shopify.com/s/files/1/0174/1800/files/picosystem_schematic.pdf
+--    https://shop.pimoroni.com/products/picosystem
+--    https://cdn.shopify.com/s/files/1/0174/1800/files/picosystem_schematic.pdf
+--
+--  Notes:
+--    LCD is a 240x240 ST7789. The Pimoroni SDK uses SPI during initialization
+--    then switches to DMA and PIO to push pixels.
+--    https://github.com/pimoroni/picosystem/blob/main/libraries/hardware.cpp#L326
+--    https://github.com/pimoroni/picosystem/blob/main/libraries/screen.pio
+--
+--    BAT_SENSE is an ADC input, volts divided by 3.
+--
+--    All of the button inputs have 10k pullups.
+--
+--    A 6 pin 2.54mm pitch pogo pin clip should work for debugging without soldering.
+--    https://www.aliexpress.com/item/1005002073177652.html
+--
 with RP.GPIO; use RP.GPIO;
-with RP.Device;
-with RP.UART;
-with RP.SPI;
 
 package PicoSystem is
    UART_TX     : aliased GPIO_Point := (Pin => 0);
@@ -42,7 +53,4 @@ package PicoSystem is
    --  Pin 27 not connected
    --  Pin 28 not connected
    --  Pin 29 not connected
-
-   UART    : RP.UART.UART_Port renames RP.Device.UART_0;
-   LCD_SPI : RP.SPI.SPI_Port   renames RP.Device.SPI_0;
 end PicoSystem;
