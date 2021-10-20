@@ -22,7 +22,7 @@
 --
 with RP.GPIO; use RP.GPIO;
 
-package PicoSystem is
+package Picosystem is
    UART_TX     : aliased GPIO_Point := (Pin => 0);
    UART_RX     : aliased GPIO_Point := (Pin => 1);
    VBUS_DETECT : aliased GPIO_Point := (Pin => 2);
@@ -53,4 +53,4 @@ package PicoSystem is
    --  Pin 27 not connected
    --  Pin 28 not connected
    --  Pin 29 not connected
-end PicoSystem;
+end Picosystem;
