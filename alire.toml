@@ -1,0 +1,16 @@
+name = "picosystem_bsp"
+description = "Pimoroni PicoSystem board support"
+version = "0.1.0"
+
+authors = ["Jeremy Grosser"]
+maintainers = ["Jeremy Grosser <jeremy@synack.me>"]
+maintainers-logins = ["JeremyGrosser"]
+
+[[depends-on]]
+rp2040_hal = "~0.7.0"
+
+[[pins]]
+rp2040_hal = { url='https://github.com/JeremyGrosser/rp2040_hal' }
+
+[configuration.values]
+rp2040_hal.Flash_Chip = "w25qxx"
