@@ -6,7 +6,8 @@ project Picosystem_Bsp is
    for Runtime ("Ada") use "zfp-cortex-m0p";
    for Target use "arm-eabi";
 
-   Linker_Switches := Rp2040_Hal.Linker_Switches;
+	Linker_Script := Project'Project_Dir & "memmap.ld";
+   Linker_Switches := ("-T", Linker_Script, Rp2040_Hal.Boot_Stage_2);
 
    for Library_Name use "Picosystem_Bsp";
    for Library_Version use Project'Library_Name & ".so." & Picosystem_Bsp_Config.Crate_Version;
