@@ -1,5 +1,3 @@
-with HAL.SPI; use HAL.SPI;
-with HAL; use HAL;
 with RP.Device;
 with RP.SPI;
 with ST7739;
@@ -14,8 +12,7 @@ package body Picosystem.Screen is
        Time => RP.Device.Timer'Access);
 
    procedure Initialize is
-      use RP.SPI;
-      SPI_Config : constant SPI_Configuration :=
+      SPI_Config : constant RP.SPI.SPI_Configuration :=
          (Baud     => 8_000_000,
           Blocking => True,
           others   => <>);
