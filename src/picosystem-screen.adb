@@ -17,10 +17,6 @@ package body Picosystem.Screen is
           Blocking => True,
           others   => <>);
    begin
-      if not RP.Device.Timer.Enabled then
-         RP.Device.Timer.Enable;
-      end if;
-
       --  Hold reset while we get everything configured
       LCD_RESET.Configure (Output);
       LCD_RESET.Clear;
@@ -32,6 +28,9 @@ package body Picosystem.Screen is
       LCD_MOSI.Configure (Output, Floating, RP.GPIO.SPI);
       LCD_SPI.Configure (SPI_Config);
 
+      if not RP.Device.Timer.Enabled then
+         RP.Device.Timer.Enable;
+      end if;
       LCD.Initialize;
    end Initialize;
 
