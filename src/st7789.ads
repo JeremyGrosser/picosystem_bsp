@@ -3,8 +3,8 @@ with HAL.GPIO;
 with HAL.SPI;
 with HAL;
 
-package ST7739 is
-   type ST7739_Screen
+package ST7789 is
+   type ST7789_Screen
       (CS   : not null HAL.GPIO.Any_GPIO_Point;
        DC   : not null HAL.GPIO.Any_GPIO_Point;
        RST  : not null HAL.GPIO.Any_GPIO_Point;
@@ -42,20 +42,20 @@ package ST7739 is
    with Size => 8;
 
    procedure Initialize
-      (This : in out ST7739_Screen);
+      (This : in out ST7789_Screen);
 
    procedure Write
-      (This : in out ST7739_Screen;
+      (This : in out ST7789_Screen;
        Reg  : Register);
 
    procedure Write
-      (This : in out ST7739_Screen;
+      (This : in out ST7789_Screen;
        Reg  : Register;
        Data : HAL.UInt8);
 
    procedure Write
-      (This : in out ST7739_Screen;
+      (This : in out ST7789_Screen;
        Reg  : Register;
        Data : HAL.UInt8_Array);
 
-end ST7739;
+end ST7789;

@@ -1,10 +1,10 @@
 with RP.Device;
 with RP.SPI;
-with ST7739;
+with ST7789;
 
 package body Picosystem.Screen is
 
-   LCD : ST7739.ST7739_Screen
+   LCD : ST7789.ST7789_Screen
       (CS   => LCD_CS'Access,
        DC   => LCD_DC'Access,
        RST  => LCD_RESET'Access,

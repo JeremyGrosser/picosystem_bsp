@@ -1,7 +1,7 @@
-package body ST7739 is
+package body ST7789 is
 
    procedure Write
-      (This : in out ST7739_Screen;
+      (This : in out ST7789_Screen;
        Reg  : Register)
    is
       use HAL.SPI;
@@ -17,7 +17,7 @@ package body ST7739 is
    end Write;
 
    procedure Write
-      (This : in out ST7739_Screen;
+      (This : in out ST7789_Screen;
        Reg  : Register;
        Data : HAL.UInt8)
    is
@@ -26,7 +26,7 @@ package body ST7739 is
    end Write;
 
    procedure Write
-      (This : in out ST7739_Screen;
+      (This : in out ST7789_Screen;
        Reg  : Register;
        Data : HAL.UInt8_Array)
    is
@@ -49,7 +49,7 @@ package body ST7739 is
    end Write;
 
    procedure Initialize
-      (This : in out ST7739_Screen)
+      (This : in out ST7789_Screen)
    is
       subtype U8 is HAL.UInt8_Array;
    begin
@@ -86,4 +86,4 @@ package body ST7739 is
       This.DC.Set;
    end Initialize;
 
-end ST7739;
+end ST7789;
