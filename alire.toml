@@ -14,3 +14,5 @@ rp2040_hal = { url='https://github.com/JeremyGrosser/rp2040_hal' }
 
 [configuration.values]
 rp2040_hal.Flash_Chip = "w25qxx"
+[[depends-on]]  # Added by alr
+embedded_components = "~0.1.0"  # Added by alr
