@@ -21,6 +21,8 @@
 --    https://www.aliexpress.com/item/1005002073177652.html
 --
 with RP.GPIO; use RP.GPIO;
+with RP.SPI;
+with RP.Device;
 
 package Picosystem is
    UART_TX     : aliased GPIO_Point := (Pin => 0);
@@ -53,4 +55,6 @@ package Picosystem is
    --  Pin 27 not connected
    --  Pin 28 not connected
    --  Pin 29 not connected
+
+   LCD_SPI : RP.SPI.SPI_Port renames RP.Device.SPI_0;
 end Picosystem;

@@ -1,72 +1,54 @@
 with HAL.SPI; use HAL.SPI;
+with HAL; use HAL;
 with RP.Device;
 with RP.SPI;
+with ST7739;
 
 package body Picosystem.Screen is
 
-   --  9.1 System Function Command Table 1
-   Port : RP.SPI.SPI_Port renames RP.Device.SPI_0;
+   LCD : ST7739.ST7739_Screen
+      (CS   => LCD_CS'Access,
+       DC   => LCD_DC'Access,
+       RST  => LCD_RESET'Access,
+       Port => LCD_SPI'Access,
+       Time => RP.Device.Timer'Access);
 
    procedure Initialize is
       use RP.SPI;
-      Config : constant SPI_Configuration :=
+      SPI_Config : constant SPI_Configuration :=
          (Baud     => 8_000_000,
           Blocking => True,
           others   => <>);
    begin
-      --  Hold reset low while we get everything configured
+      if not RP.Device.Timer.Enabled then
+         RP.Device.Timer.Enable;
+      end if;
+
+      --  Hold reset while we get everything configured
       LCD_RESET.Configure (Output);
       LCD_RESET.Clear;
 
       LCD_CS.Configure (Output);
-      LCD_CS.Clear;
-
       LCD_DC.Configure (Output);
-      LCD_DC.Clear;
-
-      LCD_VSYNC.Configure (Output);
-      LCD_VSYNC.Clear;
-
+      LCD_VSYNC.Configure (Input);
       LCD_SCLK.Configure (Output, Floating, RP.GPIO.SPI);
       LCD_MOSI.Configure (Output, Floating, RP.GPIO.SPI);
+      LCD_SPI.Configure (SPI_Config);
 
-      Port.Configure (Config);
-
-      LCD_RESET.Set;
-      --  Maybe need a delay here.
-
-      LCD_CS.Set;
-      --  Command (SWRESET);
+      LCD.Initialize;
    end Initialize;
 
-   procedure Command
-      (Cmd : UInt8)
-   is
-      C : constant SPI_Data_8b (1 .. 1) := (1 => Cmd);
-      Status : SPI_Status;
+   procedure Wait_VSync is
    begin
-      LCD_CS.Clear;
-      LCD_DC.Clear;
-      Port.Transmit (C, Status);
-      LCD_CS.Set;
-   end Command;
+      --  If already in vsync, wait for it to end
+      while LCD_VSYNC.Get loop
+         null;
+      end loop;
 
-   procedure Command
-      (Cmd  : UInt8;
-       Data : UInt8_Array)
-   is
-      C : constant SPI_Data_8b (1 .. 1) := (1 => Cmd);
-      Status : SPI_Status;
-   begin
-      LCD_CS.Clear;
-
-      LCD_DC.Clear;
-      Port.Transmit (C, Status);
-
-      LCD_DC.Set;
-      Port.Transmit (SPI_Data_8b (Data), Status);
-
-      LCD_CS.Set;
-   end Command;
+      --  Now wait for the next vsync
+      while not LCD_VSYNC.Get loop
+         null;
+      end loop;
+   end Wait_VSync;
 
 end Picosystem.Screen;
