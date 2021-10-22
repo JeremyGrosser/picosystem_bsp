@@ -15,9 +15,20 @@ package ST7789 is
    --  These register names come from the ST7735S datasheet, just for extra confusion.
    type Register is
       (SWRESET,
+       SLPOUT,
+       INVOFF,
+       INVON,
+       GAMSET,
+       DISPOFF,
+       DISPON,
+       CASET,
+       RASET,
+       RAMWR,
        TEON,
        MADCTL,
        COLMOD,
+       FRMCTR1,
+       FRMCTR2,
        GCTRL,
        VCOMS,
        LCMCTRL,
@@ -26,20 +37,8 @@ package ST7789 is
        VDVS,
        FRCTRL2,
        PWRCTRL1,
-       FRMCTR1,
-       FRMCTR2,
        GMCTRP1,
-       GMCTRN1,
-       INVOFF,
-       SLPOUT,
-       DISPON,
-       GAMSET,
-       DISPOFF,
-       RAMWR,
-       INVON,
-       CASET,
-       RASET)
-   with Size => 8;
+       GMCTRN1);
 
    procedure Initialize
       (This : in out ST7789_Screen);
@@ -58,4 +57,33 @@ package ST7789 is
        Reg  : Register;
        Data : HAL.UInt8_Array);
 
+private
+
+   for Register'Size use 8;
+   for Register use
+      (SWRESET   => 16#01#,
+       SLPOUT    => 16#11#,
+       INVOFF    => 16#20#,
+       INVON     => 16#21#,
+       GAMSET    => 16#26#,
+       DISPOFF   => 16#28#,
+       DISPON    => 16#29#,
+       CASET     => 16#2A#,
+       RASET     => 16#2B#,
+       RAMWR     => 16#2C#,
+       TEON      => 16#35#,
+       MADCTL    => 16#36#,
+       COLMOD    => 16#3A#,
+       FRMCTR1   => 16#B1#,
+       FRMCTR2   => 16#B2#,
+       GCTRL     => 16#B7#,
+       VCOMS     => 16#BB#,
+       LCMCTRL   => 16#C0#,
+       VDVVRHEN  => 16#C2#,
+       VRHS      => 16#C3#,
+       VDVS      => 16#C4#,
+       FRCTRL2   => 16#C6#,
+       PWRCTRL1  => 16#D0#,
+       GMCTRP1   => 16#E0#,
+       GMCTRN1   => 16#E1#);
 end ST7789;
