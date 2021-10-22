@@ -58,7 +58,7 @@ package body ST7789 is
       Write (This, MADCTL,    16#04#);
       Write (This, TEON,      16#00#);
       Write (This, FRMCTR2,   U8'(16#0C#, 16#0C#, 16#00#, 16#33#, 16#33#));
-      Write (This, COLMOD,    16#05#); --  16bpp
+      Write (This, COLMOD,    16#05#); --  16bpp RGB565 see datasheet 8.8.42
       Write (This, GAMSET,    16#04#);
 
       Write (This, GCTRL,     16#14#);
