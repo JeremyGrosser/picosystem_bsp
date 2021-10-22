@@ -1,12 +1,7 @@
 with RP.PWM; use RP.PWM;
+with Interfaces;
 
 package body Picosystem.LED is
-
-   Pins : array (Lights) of GPIO_Point :=
-      (Backlight => Picosystem.BACKLIGHT,
-       Red       => LED_R,
-       Green     => LED_G,
-       Blue      => LED_B);
 
    procedure Initialize is
       P : PWM_Point;
@@ -19,22 +14,33 @@ package body Picosystem.LED is
          Pins (I).Configure (Output, Pull_Up, RP.GPIO.PWM);
          P := To_PWM (Pins (I));
          Set_Mode (P.Slice, Free_Running);
-         --  Use the max divider to reduce power consumption
-         Set_Divider (P.Slice, RP.PWM.Divider'Last);
-         --  Roughly 1 KHz output
-         Set_Interval (P.Slice, 488);
+         Set_Frequency (P.Slice, Hertz (Period'Last) * PWM_Frequency);
+         Set_Interval (P.Slice, Period'Last);
          Set_Duty_Cycle (P.Slice, P.Channel, 0);
          Enable (P.Slice);
       end loop;
    end Initialize;
 
+   function Dim
+      (I : UInt16)
+       return UInt16
+   is
+      use Interfaces;
+      J : UInt32 := UInt32 (I);
+   begin
+      J := J * J;
+      J := Shift_Right (J, 16);
+      return UInt16 (J);
+   end Dim;
+
    procedure Set
       (Light : Lights;
        Level : Brightness)
    is
-      P : constant PWM_Point := To_PWM (Pins (Light));
+      P    : constant PWM_Point := To_PWM (Pins (Light));
+      Duty : constant Period := Dim (To_UInt16 (Level));
    begin
-      Set_Duty_Cycle (P.Slice, P.Channel, Period (Level));
+      Set_Duty_Cycle (P.Slice, P.Channel, Duty);
    end Set;
 
 end Picosystem.LED;
