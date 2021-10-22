@@ -58,7 +58,7 @@ package body ST7789 is
       Write (This, MADCTL,    16#04#);
       Write (This, TEON,      16#00#);
       Write (This, FRMCTR2,   U8'(16#0C#, 16#0C#, 16#00#, 16#33#, 16#33#));
-      Write (This, COLMOD,    16#03#);
+      Write (This, COLMOD,    16#05#); --  16bpp
       Write (This, GAMSET,    16#04#);
 
       Write (This, GCTRL,     16#14#);
@@ -68,7 +68,7 @@ package body ST7789 is
       Write (This, VRHS,      16#12#);
       Write (This, VDVS,      16#20#);
       Write (This, PWRCTRL1,  U8'(16#A4#, 16#A1#));
-      Write (This, FRCTRL2,   16#15#);
+      Write (This, FRCTRL2,   16#15#); --  50 Hz, column inversion
       Write (This, GMCTRP1,   U8'(16#D0#, 16#04#, 16#0D#, 16#11#, 16#13#, 16#2B#, 16#3F#,
                                   16#54#, 16#4C#, 16#18#, 16#0D#, 16#0B#, 16#1F#, 16#23#));
       Write (This, GMCTRN1,   U8'(16#D0#, 16#04#, 16#0C#, 16#11#, 16#13#, 16#2C#, 16#3F#,
