@@ -1,5 +1,12 @@
+--
+--  Copyright (C) 2021 Jeremy Grosser <jeremy@synack.me>
+--
+--  SPDX-License-Identifier: BSD-3-Clause
+--
 with Ada.Unchecked_Conversion;
+with Picosystem.Pins;
 with HAL; use HAL;
+with RP.GPIO;
 with RP; use RP;
 
 package Picosystem.LED is
@@ -21,11 +28,11 @@ private
 
    PWM_Frequency : constant Hertz := 1_000;
 
-   Pins : array (Lights) of GPIO_Point :=
-      (Backlight => Picosystem.BACKLIGHT,
-       Red       => LED_R,
-       Green     => LED_G,
-       Blue      => LED_B);
+   Pins : array (Lights) of RP.GPIO.GPIO_Point :=
+      (Backlight => Picosystem.Pins.BACKLIGHT,
+       Red       => Picosystem.Pins.LED_R,
+       Green     => Picosystem.Pins.LED_G,
+       Blue      => Picosystem.Pins.LED_B);
 
    --  Gamma correction the fast way
    --  Loosely based on dim8_raw/scale8

@@ -1,4 +1,11 @@
+--
+--  Copyright (C) 2021 Jeremy Grosser <jeremy@synack.me>
+--
+--  SPDX-License-Identifier: BSD-3-Clause
+--
+with Picosystem.Pins; use Picosystem.Pins;
 with RP.Device;
+with RP.GPIO;
 with RP.SPI;
 with ST7789;
 
@@ -12,6 +19,8 @@ package body Picosystem.Screen is
        Time => RP.Device.Timer'Access);
 
    procedure Initialize is
+      use RP.GPIO;
+
       SPI_Config : constant RP.SPI.SPI_Configuration :=
          (Baud     => 8_000_000,
           Blocking => True,

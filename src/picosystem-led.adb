@@ -1,3 +1,8 @@
+--
+--  Copyright (C) 2021 Jeremy Grosser <jeremy@synack.me>
+--
+--  SPDX-License-Identifier: BSD-3-Clause
+--
 with RP.PWM; use RP.PWM;
 with Interfaces;
 
@@ -11,7 +16,7 @@ package body Picosystem.LED is
       end if;
 
       for I in Lights'Range loop
-         Pins (I).Configure (Output, Pull_Up, RP.GPIO.PWM);
+         Pins (I).Configure (RP.GPIO.Output, RP.GPIO.Pull_Up, RP.GPIO.PWM);
          P := To_PWM (Pins (I));
          Set_Mode (P.Slice, Free_Running);
          Set_Frequency (P.Slice, Hertz (Period'Last) * PWM_Frequency);

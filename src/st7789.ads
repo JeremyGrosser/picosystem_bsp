@@ -1,3 +1,8 @@
+--
+--  Copyright (C) 2021 Jeremy Grosser <jeremy@synack.me>
+--
+--  SPDX-License-Identifier: BSD-3-Clause
+--
 with HAL.Time;
 with HAL.GPIO;
 with HAL.SPI;
