@@ -9,8 +9,5 @@ maintainers-logins = ["JeremyGrosser"]
 [[depends-on]]
 rp2040_hal = "~0.7.0"
 
-[[pins]]
-rp2040_hal = { url='https://github.com/JeremyGrosser/rp2040_hal' }
-
 [configuration.values]
 rp2040_hal.Flash_Chip = "w25qxx"
