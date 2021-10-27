@@ -5,6 +5,9 @@
 --
 package Picosystem.Screen is
 
+   Width  : constant := 240;
+   Height : constant := 240;
+
    procedure Initialize;
    procedure Wait_VSync;
 
