@@ -14,7 +14,7 @@ package Picosystem.LED is
    type Lights is (Backlight, Red, Green, Blue);
 
    Step : constant := 1.0 / (2.0 ** 16 - 1.0);
-   type Brightness is delta Step range 0.0 .. 1.0
+   type Brightness is delta Step range 0.0 .. 1.0 - Step
       with Small => Step,
            Size  => 16;
 
