@@ -5,6 +5,7 @@
 --
 with Picosystem.Pins; use Picosystem.Pins;
 with RP.Device;
+with RP.Clock;
 with RP.GPIO;
 with RP.SPI;
 with HAL.SPI;
@@ -24,7 +25,7 @@ package body Picosystem.Screen is
       use RP.SPI;
 
       SPI_Config : SPI_Configuration :=
-         (Baud      => 50_000_000,
+         (Baud      => RP.Clock.Frequency (RP.Clock.SYS) / 2, --  max supported
           Data_Size => Data_Size_8b,
           Polarity  => Active_High,
           Phase     => Falling_Edge,
@@ -83,9 +84,8 @@ package body Picosystem.Screen is
    end Wait_VSync;
 
    procedure Write
-      (P : not null access Pixels)
+      (P : Any_Pixels)
    is
-      use RP.SPI;
    begin
       while RP.DMA.Busy (DMA_Channel) loop
          null;
@@ -98,4 +98,26 @@ package body Picosystem.Screen is
           Count   => P.all'Length);
    end Write;
 
+   procedure Write
+      (P : Pixels)
+   is
+   begin
+      while RP.DMA.Busy (DMA_Channel) loop
+         null;
+      end loop;
+
+      RP.DMA.Start
+         (Channel => DMA_Channel,
+          From    => P'Address,
+          To      => LCD_SPI.FIFO_Address,
+          Count   => P'Length);
+
+      --  Once P is out of scope, accesses to that address are no longer valid,
+      --  but we're pretty sure it's statically allocated, so just keep doing
+      --  DMA.
+      --
+      --  while RP.DMA.Busy (DMA_Channel) loop
+      --     null;
+      --  end loop;
+   end Write;
 end Picosystem.Screen;

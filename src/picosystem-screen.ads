@@ -18,8 +18,13 @@ package Picosystem.Screen is
    --  Write one row of pixels at a time, double buffered.
    subtype Color is ST7789.RGB565;
    subtype Pixels is ST7789.Pixels;
+   type Any_Pixels is not null access all Pixels;
+
    procedure Write
-      (P : not null access Pixels);
+      (P : Pixels);
+
+   procedure Write
+      (P : Any_Pixels);
 
 private
 
