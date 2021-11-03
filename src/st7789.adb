@@ -58,12 +58,19 @@ package body ST7789 is
    is
       subtype U8 is HAL.UInt8_Array;
    begin
+      This.RST.Clear;
+      This.CS.Clear;
+      This.Time.Delay_Milliseconds (50);
+      This.RST.Set;
+      This.CS.Set;
+      This.Time.Delay_Milliseconds (50);
+
       Write (This, SWRESET);
       This.Time.Delay_Milliseconds (150);
       Write (This, MADCTL,    16#04#);
       Write (This, TEON,      16#00#);
       Write (This, FRMCTR2,   U8'(16#0C#, 16#0C#, 16#00#, 16#33#, 16#33#));
-      Write (This, COLMOD,    16#05#); --  16bpp RGB565 see datasheet 8.8.42
+      Write (This, COLMOD,    16#55#); --  16bpp RGB565 see datasheet 8.8.42
       Write (This, GAMSET,    16#04#);
 
       Write (This, GCTRL,     16#14#);
@@ -85,10 +92,21 @@ package body ST7789 is
       Write (This, CASET, U8'(16#00#, 16#00#, 16#00#, 16#EF#));
       Write (This, RASET, U8'(16#00#, 16#00#, 16#00#, 16#EF#));
       Write (This, RAMWR);
+   end Initialize;
 
-      --  Data mode only from this point forward
+   procedure Write
+      (This : in out ST7789_Screen;
+       Data : Pixels)
+   is
+      use HAL.SPI;
+      D : SPI_Data_16b (1 .. Data'Length)
+         with Import, Address => Data'Address;
+      Status : SPI_Status;
+   begin
       This.CS.Clear;
       This.DC.Set;
-   end Initialize;
+      This.Port.Transmit (D, Status, Timeout => 0);
+      This.CS.Set;
+   end Write;
 
 end ST7789;

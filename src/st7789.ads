@@ -62,6 +62,26 @@ package ST7789 is
        Reg  : Register;
        Data : HAL.UInt8_Array);
 
+   type RGB565 is record
+      R : HAL.UInt5;
+      G : HAL.UInt6;
+      B : HAL.UInt5;
+   end record
+      with Size => 16;
+
+   for RGB565 use record
+      R at 0 range 11 .. 15;
+      G at 0 range 5 .. 10;
+      B at 0 range 0 .. 4;
+   end record;
+
+   type Pixels is array (Integer range <>) of RGB565
+      with Component_Size => 16;
+
+   procedure Write
+      (This : in out ST7789_Screen;
+       Data : Pixels);
+
 private
 
    for Register'Size use 8;

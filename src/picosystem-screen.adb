@@ -7,7 +7,6 @@ with Picosystem.Pins; use Picosystem.Pins;
 with RP.Device;
 with RP.GPIO;
 with RP.SPI;
-with ST7789;
 with HAL.SPI;
 
 package body Picosystem.Screen is
@@ -20,22 +19,27 @@ package body Picosystem.Screen is
        Time => RP.Device.Timer'Access);
 
    procedure Initialize is
+      use HAL.SPI;
       use RP.GPIO;
+      use RP.SPI;
 
-      SPI_Config : RP.SPI.SPI_Configuration :=
-         (Baud     => 8_000_000,
-          Blocking => True,
-          others   => <>);
+      SPI_Config : SPI_Configuration :=
+         (Baud      => 50_000_000,
+          Data_Size => Data_Size_8b,
+          Polarity  => Active_High,
+          Phase     => Falling_Edge,
+          Blocking  => True,
+          others    => <>);
    begin
       --  Hold reset while we get everything configured
       LCD_RESET.Configure (Output);
       LCD_RESET.Clear;
 
-      LCD_CS.Configure (Output);
-      LCD_DC.Configure (Output);
+      LCD_CS.Configure (Output, Pull_Up);
+      LCD_DC.Configure (Output, Pull_Up);
       LCD_VSYNC.Configure (Input);
-      LCD_SCLK.Configure (Output, Floating, RP.GPIO.SPI);
-      LCD_MOSI.Configure (Output, Floating, RP.GPIO.SPI);
+      LCD_SCLK.Configure (Output, Pull_Up, RP.GPIO.SPI);
+      LCD_MOSI.Configure (Output, Pull_Up, RP.GPIO.SPI);
       LCD_SPI.Configure (SPI_Config);
 
       if not RP.Device.Timer.Enabled then
@@ -51,6 +55,7 @@ package body Picosystem.Screen is
       declare
          use RP.DMA;
       begin
+         RP.DMA.Enable;
          RP.DMA.Configure
             (Channel => DMA_Channel,
              Config  =>
@@ -59,14 +64,13 @@ package body Picosystem.Screen is
                 Trigger        => SPI0_TX,
                 others         => <>));
       end;
+
+      LCD_DC.Set;
+      LCD_CS.Clear;
    end Initialize;
 
    procedure Wait_VSync is
    begin
-      while RP.DMA.Busy (DMA_Channel) loop
-         null;
-      end loop;
-
       --  If already in vsync, wait for it to end
       while LCD_VSYNC.Get loop
          null;
@@ -78,33 +82,20 @@ package body Picosystem.Screen is
       end loop;
    end Wait_VSync;
 
-   procedure Swap_Buffers is
-      Tmp : Buffer_Index;
-   begin
-      Tmp := Reading;
-      Reading := Writing;
-      Writing := Tmp;
-   end Swap_Buffers;
-
    procedure Write
-      (P : Pixels)
+      (P : not null access Pixels)
    is
+      use RP.SPI;
    begin
-      Buffers (Writing) := P;
-
-      --  Wait for previous DMA transfer
       while RP.DMA.Busy (DMA_Channel) loop
          null;
       end loop;
 
-      Swap_Buffers;
-
-      --  Start DMA transfer
       RP.DMA.Start
          (Channel => DMA_Channel,
-          From    => Buffers (Reading)'Address,
+          From    => P.all'Address,
           To      => LCD_SPI.FIFO_Address,
-          Count   => Buffers (Reading)'Length);
+          Count   => P.all'Length);
    end Write;
 
 end Picosystem.Screen;

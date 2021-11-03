@@ -16,7 +16,7 @@ package body Picosystem.LED is
       end if;
 
       for I in Lights'Range loop
-         Pins (I).Configure (RP.GPIO.Output, RP.GPIO.Pull_Up, RP.GPIO.PWM);
+         Pins (I).Configure (RP.GPIO.Output, RP.GPIO.Floating, RP.GPIO.PWM);
          P := To_PWM (Pins (I));
          Set_Mode (P.Slice, Free_Running);
          Set_Frequency (P.Slice, Hertz (Period'Last) * PWM_Frequency);
@@ -43,9 +43,28 @@ package body Picosystem.LED is
        Level : Brightness)
    is
       P    : constant PWM_Point := To_PWM (Pins (Light));
-      Duty : constant Period := Dim (To_UInt16 (Level));
+      Duty : constant Period := Dim (Level);
    begin
       Set_Duty_Cycle (P.Slice, P.Channel, Duty);
    end Set;
 
+   procedure Set
+      (R, G, B : Brightness)
+   is
+   begin
+      Set (Red, R);
+      Set (Green, G);
+      Set (Blue, B);
+   end Set;
+
+   procedure Set
+      (Color : RGB888)
+   is
+      use Interfaces;
+      C : constant UInt32 := UInt32 (Color);
+   begin
+      Set (Red, Brightness (Shift_Right (C, 16)) * 256);
+      Set (Green, Brightness (Shift_Right (C, 8) and 16#FF#) * 256);
+      Set (Blue, Brightness (C and 16#FF#) * 256);
+   end Set;
 end Picosystem.LED;
