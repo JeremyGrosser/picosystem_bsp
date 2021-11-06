@@ -84,7 +84,7 @@ package body Picosystem.Screen is
    end Wait_VSync;
 
    procedure Write
-      (P : Any_Pixels)
+      (Line : not null access Scanline)
    is
    begin
       while RP.DMA.Busy (DMA_Channel) loop
@@ -93,31 +93,8 @@ package body Picosystem.Screen is
 
       RP.DMA.Start
          (Channel => DMA_Channel,
-          From    => P.all'Address,
+          From    => Line.all'Address,
           To      => LCD_SPI.FIFO_Address,
-          Count   => P.all'Length);
-   end Write;
-
-   procedure Write
-      (P : Pixels)
-   is
-   begin
-      while RP.DMA.Busy (DMA_Channel) loop
-         null;
-      end loop;
-
-      RP.DMA.Start
-         (Channel => DMA_Channel,
-          From    => P'Address,
-          To      => LCD_SPI.FIFO_Address,
-          Count   => P'Length);
-
-      --  Once P is out of scope, accesses to that address are no longer valid,
-      --  but we're pretty sure it's statically allocated, so just keep doing
-      --  DMA.
-      --
-      --  while RP.DMA.Busy (DMA_Channel) loop
-      --     null;
-      --  end loop;
+          Count   => Scanline'Length);
    end Write;
 end Picosystem.Screen;
