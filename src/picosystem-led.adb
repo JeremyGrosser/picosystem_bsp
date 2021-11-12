@@ -4,7 +4,6 @@
 --  SPDX-License-Identifier: BSD-3-Clause
 --
 with RP.PWM; use RP.PWM;
-with Interfaces;
 
 package body Picosystem.LED is
 
@@ -30,7 +29,6 @@ package body Picosystem.LED is
       (I : UInt16)
        return UInt16
    is
-      use Interfaces;
       J : UInt32 := UInt32 (I);
    begin
       J := J * J;
@@ -60,7 +58,6 @@ package body Picosystem.LED is
    procedure Set
       (Color : RGB888)
    is
-      use Interfaces;
       C : constant UInt32 := UInt32 (Color);
    begin
       Set (Red, Brightness (Shift_Right (C, 16)) * 256);

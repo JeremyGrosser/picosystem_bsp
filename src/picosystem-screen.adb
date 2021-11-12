@@ -9,6 +9,7 @@ with RP.Clock;
 with RP.GPIO;
 with RP.SPI;
 with HAL.SPI;
+with HAL; use HAL;
 
 package body Picosystem.Screen is
 
