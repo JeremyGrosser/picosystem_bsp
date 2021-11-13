@@ -9,25 +9,23 @@ with RP.GPIO;
 
 package Picosystem.LED is
 
-   type Lights is (Backlight, Red, Green, Blue);
-
    subtype Brightness is UInt16;
-
    subtype RGB888 is UInt24;
 
    procedure Initialize;
 
-   procedure Set
-      (Light : Lights;
-       Level : Brightness);
+   procedure Set_Backlight
+      (Level : Brightness);
 
-   procedure Set
+   procedure Set_Color
       (R, G, B : Brightness);
 
-   procedure Set
+   procedure Set_Color
       (Color : RGB888);
 
 private
+
+   type Lights is (Backlight, Red, Green, Blue);
 
    PWM_Frequency : constant Hertz := 1_000;
 
@@ -36,6 +34,10 @@ private
        Red       => Picosystem.Pins.LED_R,
        Green     => Picosystem.Pins.LED_G,
        Blue      => Picosystem.Pins.LED_B);
+
+   procedure Set
+      (Light : Lights;
+       Level : Brightness);
 
    --  Gamma correction the fast way
    --  Loosely based on dim8_raw/scale8

@@ -46,16 +46,23 @@ package body Picosystem.LED is
       Set_Duty_Cycle (P.Slice, P.Channel, Duty);
    end Set;
 
-   procedure Set
+   procedure Set_Backlight
+      (Level : Brightness)
+   is
+   begin
+      Set (Backlight, Level);
+   end Set_Backlight;
+
+   procedure Set_Color
       (R, G, B : Brightness)
    is
    begin
       Set (Red, R);
       Set (Green, G);
       Set (Blue, B);
-   end Set;
+   end Set_Color;
 
-   procedure Set
+   procedure Set_Color
       (Color : RGB888)
    is
       C : constant UInt32 := UInt32 (Color);
@@ -63,5 +70,5 @@ package body Picosystem.LED is
       Set (Red, Brightness (Shift_Right (C, 16)) * 256);
       Set (Green, Brightness (Shift_Right (C, 8) and 16#FF#) * 256);
       Set (Blue, Brightness (C and 16#FF#) * 256);
-   end Set;
+   end Set_Color;
 end Picosystem.LED;
