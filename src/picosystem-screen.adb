@@ -33,7 +33,6 @@ package body Picosystem.Screen is
           Blocking  => True,
           others    => <>);
    begin
-      --  Hold reset while we get everything configured
       LCD_RESET.Configure (Output);
       LCD_RESET.Clear;
 
